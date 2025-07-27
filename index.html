@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Alquileres</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Gestión de Propiedades</h1>
+    </header>
+    <section id="property-selector">
+        <label for="property">Propiedad:</label>
+        <select id="property"></select>
+        <button id="new-property">Nueva Propiedad</button>
+    </section>
+
+    <section id="general">
+        <h2>Datos Generales</h2>
+        <label>Dirección<input type="text" id="address"></label>
+        <label>Referencia Catastral<input type="text" id="catastro"></label>
+        <label>Fecha de Adquisición<input type="date" id="acquisitionDate"></label>
+        <label>Precio de Compra<input type="number" id="purchasePrice"></label>
+        <label>Número de Habitaciones<input type="number" id="rooms"></label>
+        <label>Descripción<textarea id="description"></textarea></label>
+        <label>Plano (URL de la imagen)<input type="text" id="floorPlan"></label>
+        <label>ITE/Observaciones<textarea id="observations"></textarea></label>
+    </section>
+
+    <section id="contract">
+        <h2>Contrato de Alquiler</h2>
+        <label>Inquilino<input type="text" id="tenantName"></label>
+        <label>DNI/NIE<input type="text" id="tenantId"></label>
+        <label>Contacto<input type="text" id="tenantContact"></label>
+        <label>Inicio<input type="date" id="contractStart"></label>
+        <label>Fin<input type="date" id="contractEnd"></label>
+        <label>Renta Mensual<input type="number" id="monthlyRent"></label>
+        <label>Forma de Pago<input type="text" id="paymentMethod"></label>
+        <label>Fianza<input type="number" id="deposit"></label>
+        <label>Actualizaciones<input type="text" id="annualUpdates"></label>
+    </section>
+
+    <section id="supplies">
+        <h2>Suministros</h2>
+        <h3>Electricidad</h3>
+        <label>Compañía<input type="text" id="electricCompany"></label>
+        <label>Titular<input type="text" id="electricHolder"></label>
+        <label>Nº Contrato<input type="text" id="electricContract"></label>
+        <label>Fecha Alta<input type="date" id="electricDate"></label>
+        <label>Coste Mensual<input type="number" id="electricCost"></label>
+
+        <h3>Agua</h3>
+        <label>Compañía<input type="text" id="waterCompany"></label>
+        <label>Titular<input type="text" id="waterHolder"></label>
+        <label>Nº Contrato<input type="text" id="waterContract"></label>
+        <label>Fecha Alta<input type="date" id="waterDate"></label>
+        <label>Coste Mensual<input type="number" id="waterCost"></label>
+
+        <h3>Basuras</h3>
+        <label>Tasa Municipal<input type="number" id="wasteFee"></label>
+        <label>Frecuencia de Pago<input type="text" id="wasteFrequency"></label>
+
+        <h3>Gas</h3>
+        <label>Compañía<input type="text" id="gasCompany"></label>
+        <label>Titular<input type="text" id="gasHolder"></label>
+        <label>Nº Contrato<input type="text" id="gasContract"></label>
+        <label>Fecha Alta<input type="date" id="gasDate"></label>
+        <label>Coste Mensual<input type="number" id="gasCost"></label>
+    </section>
+
+    <section id="community">
+        <h2>Comunidad de Propietarios</h2>
+        <label>Cuota<input type="number" id="communityFee"></label>
+        <label>Administrador<input type="text" id="communityManager"></label>
+        <label>Contacto<input type="text" id="communityContact"></label>
+        <label>Últimas Actas<textarea id="communityMinutes"></textarea></label>
+    </section>
+
+    <section id="insurance">
+        <h2>Seguros</h2>
+        <label>Compañía<input type="text" id="insuranceCompany"></label>
+        <label>Póliza<input type="text" id="insurancePolicy"></label>
+        <label>Coberturas<textarea id="insuranceCoverage"></textarea></label>
+        <label>Prima Anual<input type="number" id="insurancePremium"></label>
+        <label>Renovación<input type="date" id="insuranceRenewal"></label>
+    </section>
+
+    <section id="repairs">
+        <h2>Historial de Reparaciones</h2>
+        <table id="repairsTable">
+            <thead>
+                <tr><th>Fecha</th><th>Empresa</th><th>Descripción</th><th>Coste</th><th>Garantía</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <h3>Añadir Reparación</h3>
+        <label>Fecha<input type="date" id="repairDate"></label>
+        <label>Empresa<input type="text" id="repairCompany"></label>
+        <label>Descripción<input type="text" id="repairDesc"></label>
+        <label>Coste<input type="number" id="repairCost"></label>
+        <label>Garantía<input type="text" id="repairWarranty"></label>
+        <button id="addRepair">Añadir</button>
+    </section>
+
+    <section id="profitability">
+        <h2>Rentabilidad Anual</h2>
+        <table>
+            <thead>
+                <tr><th>Ingresos</th><th>Gastos</th><th>Beneficio</th><th>Rentabilidad (%)</th></tr>
+            </thead>
+            <tbody>
+                <tr id="profitRow"></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <button id="save">Guardar</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,253 @@
+const propertySelect = document.getElementById('property');
+const newPropertyBtn = document.getElementById('new-property');
+const saveBtn = document.getElementById('save');
+const addRepairBtn = document.getElementById('addRepair');
+const repairsTableBody = document.querySelector('#repairsTable tbody');
+const profitRow = document.getElementById('profitRow');
+
+let properties = JSON.parse(localStorage.getItem('properties') || '{}');
+let current = null;
+
+function populateSelect() {
+    propertySelect.innerHTML = '';
+    for (const key of Object.keys(properties)) {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = key;
+        propertySelect.appendChild(opt);
+    }
+}
+
+function clearForm() {
+    document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+    repairsTableBody.innerHTML = '';
+    profitRow.innerHTML = '';
+}
+
+function fillForm(data) {
+    document.getElementById('address').value = data.general.address || '';
+    document.getElementById('catastro').value = data.general.catastro || '';
+    document.getElementById('acquisitionDate').value = data.general.acquisitionDate || '';
+    document.getElementById('purchasePrice').value = data.general.purchasePrice || '';
+    document.getElementById('rooms').value = data.general.rooms || '';
+    document.getElementById('description').value = data.general.description || '';
+    document.getElementById('floorPlan').value = data.general.floorPlan || '';
+    document.getElementById('observations').value = data.general.observations || '';
+
+    const c = data.contract;
+    document.getElementById('tenantName').value = c.tenantName || '';
+    document.getElementById('tenantId').value = c.tenantId || '';
+    document.getElementById('tenantContact').value = c.tenantContact || '';
+    document.getElementById('contractStart').value = c.start || '';
+    document.getElementById('contractEnd').value = c.end || '';
+    document.getElementById('monthlyRent').value = c.rent || '';
+    document.getElementById('paymentMethod').value = c.payment || '';
+    document.getElementById('deposit').value = c.deposit || '';
+    document.getElementById('annualUpdates').value = c.updates || '';
+
+    const s = data.supplies;
+    document.getElementById('electricCompany').value = s.electric.company || '';
+    document.getElementById('electricHolder').value = s.electric.holder || '';
+    document.getElementById('electricContract').value = s.electric.contract || '';
+    document.getElementById('electricDate').value = s.electric.date || '';
+    document.getElementById('electricCost').value = s.electric.cost || '';
+
+    document.getElementById('waterCompany').value = s.water.company || '';
+    document.getElementById('waterHolder').value = s.water.holder || '';
+    document.getElementById('waterContract').value = s.water.contract || '';
+    document.getElementById('waterDate').value = s.water.date || '';
+    document.getElementById('waterCost').value = s.water.cost || '';
+
+    document.getElementById('wasteFee').value = s.waste.fee || '';
+    document.getElementById('wasteFrequency').value = s.waste.frequency || '';
+
+    document.getElementById('gasCompany').value = s.gas.company || '';
+    document.getElementById('gasHolder').value = s.gas.holder || '';
+    document.getElementById('gasContract').value = s.gas.contract || '';
+    document.getElementById('gasDate').value = s.gas.date || '';
+    document.getElementById('gasCost').value = s.gas.cost || '';
+
+    const m = data.community;
+    document.getElementById('communityFee').value = m.fee || '';
+    document.getElementById('communityManager').value = m.manager || '';
+    document.getElementById('communityContact').value = m.contact || '';
+    document.getElementById('communityMinutes').value = m.minutes || '';
+
+    const ins = data.insurance;
+    document.getElementById('insuranceCompany').value = ins.company || '';
+    document.getElementById('insurancePolicy').value = ins.policy || '';
+    document.getElementById('insuranceCoverage').value = ins.coverage || '';
+    document.getElementById('insurancePremium').value = ins.premium || '';
+    document.getElementById('insuranceRenewal').value = ins.renewal || '';
+
+    repairsTableBody.innerHTML = '';
+    for (const r of data.repairs) {
+        addRepairRow(r);
+    }
+    updateProfit();
+}
+
+function grabForm() {
+    return {
+        general: {
+            address: document.getElementById('address').value,
+            catastro: document.getElementById('catastro').value,
+            acquisitionDate: document.getElementById('acquisitionDate').value,
+            purchasePrice: parseFloat(document.getElementById('purchasePrice').value) || 0,
+            rooms: document.getElementById('rooms').value,
+            description: document.getElementById('description').value,
+            floorPlan: document.getElementById('floorPlan').value,
+            observations: document.getElementById('observations').value,
+        },
+        contract: {
+            tenantName: document.getElementById('tenantName').value,
+            tenantId: document.getElementById('tenantId').value,
+            tenantContact: document.getElementById('tenantContact').value,
+            start: document.getElementById('contractStart').value,
+            end: document.getElementById('contractEnd').value,
+            rent: parseFloat(document.getElementById('monthlyRent').value) || 0,
+            payment: document.getElementById('paymentMethod').value,
+            deposit: parseFloat(document.getElementById('deposit').value) || 0,
+            updates: document.getElementById('annualUpdates').value,
+        },
+        supplies: {
+            electric: {
+                company: document.getElementById('electricCompany').value,
+                holder: document.getElementById('electricHolder').value,
+                contract: document.getElementById('electricContract').value,
+                date: document.getElementById('electricDate').value,
+                cost: parseFloat(document.getElementById('electricCost').value) || 0,
+            },
+            water: {
+                company: document.getElementById('waterCompany').value,
+                holder: document.getElementById('waterHolder').value,
+                contract: document.getElementById('waterContract').value,
+                date: document.getElementById('waterDate').value,
+                cost: parseFloat(document.getElementById('waterCost').value) || 0,
+            },
+            waste: {
+                fee: parseFloat(document.getElementById('wasteFee').value) || 0,
+                frequency: document.getElementById('wasteFrequency').value,
+            },
+            gas: {
+                company: document.getElementById('gasCompany').value,
+                holder: document.getElementById('gasHolder').value,
+                contract: document.getElementById('gasContract').value,
+                date: document.getElementById('gasDate').value,
+                cost: parseFloat(document.getElementById('gasCost').value) || 0,
+            },
+        },
+        community: {
+            fee: parseFloat(document.getElementById('communityFee').value) || 0,
+            manager: document.getElementById('communityManager').value,
+            contact: document.getElementById('communityContact').value,
+            minutes: document.getElementById('communityMinutes').value,
+        },
+        insurance: {
+            company: document.getElementById('insuranceCompany').value,
+            policy: document.getElementById('insurancePolicy').value,
+            coverage: document.getElementById('insuranceCoverage').value,
+            premium: parseFloat(document.getElementById('insurancePremium').value) || 0,
+            renewal: document.getElementById('insuranceRenewal').value,
+        },
+        repairs: Array.from(repairsTableBody.children).map(row => ({
+            date: row.children[0].textContent,
+            company: row.children[1].textContent,
+            description: row.children[2].textContent,
+            cost: parseFloat(row.children[3].textContent) || 0,
+            warranty: row.children[4].textContent,
+        })),
+    };
+}
+
+function addRepairRow(r) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.date}</td><td>${r.company}</td><td>${r.description}</td><td>${r.cost}</td><td>${r.warranty}</td>`;
+    repairsTableBody.appendChild(tr);
+}
+
+function updateProfit() {
+    if (!current) return;
+    const data = grabForm();
+    const income = data.contract.rent * 12;
+    const expenses =
+        (data.supplies.electric.cost +
+         data.supplies.water.cost +
+         data.supplies.gas.cost) * 12 +
+        data.supplies.waste.fee +
+        data.community.fee * 12 +
+        data.insurance.premium +
+        data.repairs.reduce((sum, r) => sum + r.cost, 0);
+    const profit = income - expenses;
+    const returnPct = data.general.purchasePrice ? (profit / data.general.purchasePrice * 100).toFixed(2) : 0;
+    profitRow.innerHTML = `<td>${income.toFixed(2)}</td><td>${expenses.toFixed(2)}</td><td>${profit.toFixed(2)}</td><td>${returnPct}</td>`;
+}
+
+propertySelect.addEventListener('change', () => {
+    const key = propertySelect.value;
+    current = key;
+    if (properties[key]) {
+        fillForm(properties[key]);
+    } else {
+        clearForm();
+    }
+});
+
+newPropertyBtn.addEventListener('click', () => {
+    const name = prompt('Nombre de la nueva propiedad');
+    if (name) {
+        properties[name] = getEmptyProperty();
+        populateSelect();
+        propertySelect.value = name;
+        propertySelect.dispatchEvent(new Event('change'));
+    }
+});
+
+saveBtn.addEventListener('click', () => {
+    if (!current) {
+        alert('Seleccione una propiedad');
+        return;
+    }
+    properties[current] = grabForm();
+    localStorage.setItem('properties', JSON.stringify(properties));
+    updateProfit();
+    alert('Guardado');
+});
+
+addRepairBtn.addEventListener('click', () => {
+    const r = {
+        date: document.getElementById('repairDate').value,
+        company: document.getElementById('repairCompany').value,
+        description: document.getElementById('repairDesc').value,
+        cost: parseFloat(document.getElementById('repairCost').value) || 0,
+        warranty: document.getElementById('repairWarranty').value,
+    };
+    addRepairRow(r);
+    updateProfit();
+});
+
+function getEmptyProperty() {
+    return {
+        general: {},
+        contract: {},
+        supplies: { electric: {}, water: {}, waste: {}, gas: {} },
+        community: {},
+        insurance: {},
+        repairs: [],
+    };
+}
+
+function init() {
+    if (Object.keys(properties).length === 0) {
+        properties['Piso 1'] = getEmptyProperty();
+        properties['Piso 2'] = getEmptyProperty();
+        properties['Piso 3'] = getEmptyProperty();
+        properties['Local'] = getEmptyProperty();
+    }
+    populateSelect();
+    propertySelect.selectedIndex = 0;
+    propertySelect.dispatchEvent(new Event('change'));
+}
+
+init();
+
