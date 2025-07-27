@@ -1,6 +1,7 @@
 const propertySelect = document.getElementById('property');
 const newPropertyBtn = document.getElementById('new-property');
 const saveBtn = document.getElementById('save');
+const exportBtn = document.getElementById('exportExcel');
 const addRepairBtn = document.getElementById('addRepair');
 const repairsTableBody = document.querySelector('#repairsTable tbody');
 const profitRow = document.getElementById('profitRow');
@@ -80,6 +81,7 @@ const translations = {
         benefit: 'Beneficio',
         profitability: 'Rentabilidad (%)',
         save: 'Guardar',
+        exportExcel: 'Exportar a Excel',
         footer: 'Datos almacenados en localStorage del navegador'
     },
     en: {
@@ -152,6 +154,7 @@ const translations = {
         benefit: 'Profit',
         profitability: 'Profitability (%)',
         save: 'Save',
+        exportExcel: 'Export to Excel',
         footer: 'Data stored in browser localStorage'
     }
 };
@@ -332,9 +335,7 @@ function addRepairRow(r) {
     repairsTableBody.appendChild(tr);
 }
 
-function updateProfit() {
-    if (!current) return;
-    const data = grabForm();
+function computeProfit(data) {
     const income = data.contract.rent * 12;
     const expenses =
         (data.supplies.electric.cost +
@@ -345,8 +346,106 @@ function updateProfit() {
         data.insurance.premium +
         data.repairs.reduce((sum, r) => sum + r.cost, 0);
     const profit = income - expenses;
-    const returnPct = data.general.purchasePrice ? (profit / data.general.purchasePrice * 100).toFixed(2) : 0;
-    profitRow.innerHTML = `<td>${income.toFixed(2)}</td><td>${expenses.toFixed(2)}</td><td>${profit.toFixed(2)}</td><td>${returnPct}</td>`;
+    const returnPct = data.general.purchasePrice ? (profit / data.general.purchasePrice * 100) : 0;
+    return { income, expenses, profit, returnPct };
+}
+
+function updateProfit() {
+    if (!current) return;
+    const data = grabForm();
+    const p = computeProfit(data);
+    profitRow.innerHTML = `<td>${p.income.toFixed(2)}</td><td>${p.expenses.toFixed(2)}</td><td>${p.profit.toFixed(2)}</td><td>${p.returnPct.toFixed(2)}</td>`;
+}
+
+function generateExcel(data) {
+    const wb = XLSX.utils.book_new();
+
+    const generalSheet = XLSX.utils.aoa_to_sheet([
+        ['Dirección', data.general.address],
+        ['Referencia Catastral', data.general.catastro],
+        ['Fecha de Adquisición', data.general.acquisitionDate],
+        ['Precio de Compra', data.general.purchasePrice],
+        ['Número de Habitaciones', data.general.rooms],
+        ['Descripción', data.general.description],
+        ['Plano', data.general.floorPlan],
+        ['ITE/Observaciones', data.general.observations],
+    ]);
+    XLSX.utils.book_append_sheet(wb, generalSheet, 'Generales');
+
+    const contractSheet = XLSX.utils.aoa_to_sheet([
+        ['Inquilino', data.contract.tenantName],
+        ['DNI/NIE', data.contract.tenantId],
+        ['Contacto', data.contract.tenantContact],
+        ['Inicio', data.contract.start],
+        ['Fin', data.contract.end],
+        ['Renta Mensual', data.contract.rent],
+        ['Forma de Pago', data.contract.payment],
+        ['Fianza', data.contract.deposit],
+        ['Actualizaciones', data.contract.updates],
+    ]);
+    XLSX.utils.book_append_sheet(wb, contractSheet, 'Contrato');
+
+    const s = data.supplies;
+    const suppliesSheet = XLSX.utils.aoa_to_sheet([
+        ['Electricidad'],
+        ['Compañía', s.electric.company],
+        ['Titular', s.electric.holder],
+        ['Nº Contrato', s.electric.contract],
+        ['Fecha Alta', s.electric.date],
+        ['Coste Mensual', s.electric.cost],
+        [],
+        ['Agua'],
+        ['Compañía', s.water.company],
+        ['Titular', s.water.holder],
+        ['Nº Contrato', s.water.contract],
+        ['Fecha Alta', s.water.date],
+        ['Coste Mensual', s.water.cost],
+        [],
+        ['Basuras'],
+        ['Tasa Municipal', s.waste.fee],
+        ['Frecuencia de Pago', s.waste.frequency],
+        [],
+        ['Gas'],
+        ['Compañía', s.gas.company],
+        ['Titular', s.gas.holder],
+        ['Nº Contrato', s.gas.contract],
+        ['Fecha Alta', s.gas.date],
+        ['Coste Mensual', s.gas.cost],
+    ]);
+    XLSX.utils.book_append_sheet(wb, suppliesSheet, 'Suministros');
+
+    const communitySheet = XLSX.utils.aoa_to_sheet([
+        ['Cuota', data.community.fee],
+        ['Administrador', data.community.manager],
+        ['Contacto', data.community.contact],
+        ['Últimas Actas', data.community.minutes],
+    ]);
+    XLSX.utils.book_append_sheet(wb, communitySheet, 'Comunidad');
+
+    const insuranceSheet = XLSX.utils.aoa_to_sheet([
+        ['Compañía', data.insurance.company],
+        ['Póliza', data.insurance.policy],
+        ['Coberturas', data.insurance.coverage],
+        ['Prima Anual', data.insurance.premium],
+        ['Renovación', data.insurance.renewal],
+    ]);
+    XLSX.utils.book_append_sheet(wb, insuranceSheet, 'Seguros');
+
+    const repairsData = [
+        ['Fecha', 'Empresa', 'Descripción', 'Coste', 'Garantía'],
+        ...data.repairs.map(r => [r.date, r.company, r.description, r.cost, r.warranty])
+    ];
+    const repairsSheet = XLSX.utils.aoa_to_sheet(repairsData);
+    XLSX.utils.book_append_sheet(wb, repairsSheet, 'Reparaciones');
+
+    const p = computeProfit(data);
+    const profitabilitySheet = XLSX.utils.aoa_to_sheet([
+        ['Ingresos', 'Gastos', 'Beneficio', 'Rentabilidad (%)'],
+        [p.income, p.expenses, p.profit, p.returnPct]
+    ]);
+    XLSX.utils.book_append_sheet(wb, profitabilitySheet, 'Rentabilidad');
+
+    XLSX.writeFile(wb, `${current}.xlsx`);
 }
 
 propertySelect.addEventListener('change', () => {
@@ -378,6 +477,15 @@ saveBtn.addEventListener('click', () => {
     localStorage.setItem('properties', JSON.stringify(properties));
     updateProfit();
     alert('Guardado');
+});
+
+exportBtn.addEventListener('click', () => {
+    if (!current) {
+        alert('Seleccione una propiedad');
+        return;
+    }
+    const data = grabForm();
+    generateExcel(data);
 });
 
 addRepairBtn.addEventListener('click', () => {
