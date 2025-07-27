@@ -62,7 +62,9 @@ const translations = {
         insuranceCompany: 'Compañía',
         insurancePolicy: 'Póliza',
         insuranceCoverage: 'Coberturas',
-        insurancePremium: 'Prima Anual',
+        insurancePremium: 'Seguro Hogar',
+        tenantInsurance: 'Seguro Inquilino',
+        ibi: 'IBI',
         insuranceRenewal: 'Renovación',
         repairsSection: 'Historial de Reparaciones',
         repairsAdd: 'Añadir Reparación',
@@ -135,7 +137,9 @@ const translations = {
         insuranceCompany: 'Company',
         insurancePolicy: 'Policy',
         insuranceCoverage: 'Coverage',
-        insurancePremium: 'Annual Premium',
+        insurancePremium: 'Home Insurance',
+        tenantInsurance: 'Tenant Insurance',
+        ibi: 'Property Tax',
         insuranceRenewal: 'Renewal',
         repairsSection: 'Repairs History',
         repairsAdd: 'Add Repair',
@@ -238,6 +242,7 @@ function fillForm(data) {
 
     const m = data.community;
     document.getElementById('communityFee').value = m.fee || '';
+    document.getElementById('ibi').value = m.ibi || '';
     document.getElementById('communityManager').value = m.manager || '';
     document.getElementById('communityContact').value = m.contact || '';
     document.getElementById('communityMinutes').value = m.minutes || '';
@@ -247,6 +252,7 @@ function fillForm(data) {
     document.getElementById('insurancePolicy').value = ins.policy || '';
     document.getElementById('insuranceCoverage').value = ins.coverage || '';
     document.getElementById('insurancePremium').value = ins.premium || '';
+    document.getElementById('tenantInsurance').value = ins.tenantPremium || '';
     document.getElementById('insuranceRenewal').value = ins.renewal || '';
 
     repairsTableBody.innerHTML = '';
@@ -308,6 +314,7 @@ function grabForm() {
         },
         community: {
             fee: parseFloat(document.getElementById('communityFee').value) || 0,
+            ibi: parseFloat(document.getElementById('ibi').value) || 0,
             manager: document.getElementById('communityManager').value,
             contact: document.getElementById('communityContact').value,
             minutes: document.getElementById('communityMinutes').value,
@@ -317,6 +324,7 @@ function grabForm() {
             policy: document.getElementById('insurancePolicy').value,
             coverage: document.getElementById('insuranceCoverage').value,
             premium: parseFloat(document.getElementById('insurancePremium').value) || 0,
+            tenantPremium: parseFloat(document.getElementById('tenantInsurance').value) || 0,
             renewal: document.getElementById('insuranceRenewal').value,
         },
         repairs: Array.from(repairsTableBody.children).map(row => ({
@@ -338,13 +346,10 @@ function addRepairRow(r) {
 function computeProfit(data) {
     const income = data.contract.rent * 12;
     const expenses =
-        (data.supplies.electric.cost +
-         data.supplies.water.cost +
-         data.supplies.gas.cost) * 12 +
-        data.supplies.waste.fee +
-        data.community.fee * 12 +
         data.insurance.premium +
-        data.repairs.reduce((sum, r) => sum + r.cost, 0);
+        (data.insurance.tenantPremium || 0) +
+        (data.community.ibi || 0) +
+        data.community.fee * 12;
     const profit = income - expenses;
     const returnPct = data.general.purchasePrice ? (profit / data.general.purchasePrice * 100) : 0;
     return { income, expenses, profit, returnPct };
@@ -416,6 +421,7 @@ function generateExcel(data) {
 
     const communitySheet = XLSX.utils.aoa_to_sheet([
         ['Cuota', data.community.fee],
+        ['IBI', data.community.ibi],
         ['Administrador', data.community.manager],
         ['Contacto', data.community.contact],
         ['Últimas Actas', data.community.minutes],
@@ -426,7 +432,8 @@ function generateExcel(data) {
         ['Compañía', data.insurance.company],
         ['Póliza', data.insurance.policy],
         ['Coberturas', data.insurance.coverage],
-        ['Prima Anual', data.insurance.premium],
+        ['Seguro Hogar', data.insurance.premium],
+        ['Seguro Inquilino', data.insurance.tenantPremium],
         ['Renovación', data.insurance.renewal],
     ]);
     XLSX.utils.book_append_sheet(wb, insuranceSheet, 'Seguros');
