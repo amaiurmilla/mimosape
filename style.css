@@ -160,6 +160,14 @@ button {
     width: 100%;
 }
 
+#exportExcel {
+    background: #28a745;
+    color: #fff;
+    padding: 12px 0;
+    width: 100%;
+    margin-top: 10px;
+}
+
 #save:hover {
     background: #0056b3;
 }
@@ -170,6 +178,18 @@ body.dark #save {
 
 body.dark #save:hover {
     background: #00408d;
+}
+
+#exportExcel:hover {
+    background: #1e7e34;
+}
+
+body.dark #exportExcel {
+    background: #1e7e34;
+}
+
+body.dark #exportExcel:hover {
+    background: #155d27;
 }
 
 footer {
