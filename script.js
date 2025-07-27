@@ -29,7 +29,6 @@ const translations = {
         purchasePrice: 'Precio de Compra',
         rooms: 'Número de Habitaciones',
         description: 'Descripción',
-        floorPlan: 'Plano (URL de la imagen)',
         observations: 'ITE/Observaciones',
         contractSection: 'Contrato de Alquiler',
         tenantName: 'Inquilino',
@@ -104,7 +103,6 @@ const translations = {
         purchasePrice: 'Purchase Price',
         rooms: 'Rooms',
         description: 'Description',
-        floorPlan: 'Floor Plan (image URL)',
         observations: 'ITE/Observations',
         contractSection: 'Rental Contract',
         tenantName: 'Tenant',
@@ -204,7 +202,6 @@ function fillForm(data) {
     document.getElementById('purchasePrice').value = data.general.purchasePrice || '';
     document.getElementById('rooms').value = data.general.rooms || '';
     document.getElementById('description').value = data.general.description || '';
-    document.getElementById('floorPlan').value = data.general.floorPlan || '';
     document.getElementById('observations').value = data.general.observations || '';
 
     const c = data.contract;
@@ -271,7 +268,6 @@ function grabForm() {
             purchasePrice: parseFloat(document.getElementById('purchasePrice').value) || 0,
             rooms: document.getElementById('rooms').value,
             description: document.getElementById('description').value,
-            floorPlan: document.getElementById('floorPlan').value,
             observations: document.getElementById('observations').value,
         },
         contract: {
@@ -372,7 +368,6 @@ function generateExcel(data) {
         ['Precio de Compra', data.general.purchasePrice],
         ['Número de Habitaciones', data.general.rooms],
         ['Descripción', data.general.description],
-        ['Plano', data.general.floorPlan],
         ['ITE/Observaciones', data.general.observations],
     ]);
     XLSX.utils.book_append_sheet(wb, generalSheet, 'Generales');
