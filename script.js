@@ -7,6 +7,169 @@ const profitRow = document.getElementById('profitRow');
 const tabs = document.querySelectorAll('#tabs .tab');
 const sections = document.querySelectorAll('.tab-section');
 const darkToggle = document.getElementById('dark-toggle');
+const languageSelect = document.getElementById('language');
+
+const translations = {
+    es: {
+        title: 'Gestión de Propiedades',
+        propertyLabel: 'Propiedad:',
+        newProperty: 'Nueva Propiedad',
+        'tab-general': 'Generales',
+        'tab-contract': 'Contrato',
+        'tab-supplies': 'Suministros',
+        'tab-community': 'Comunidad',
+        'tab-insurance': 'Seguros',
+        'tab-repairs': 'Reparaciones',
+        'tab-profitability': 'Rentabilidad',
+        generalSection: 'Datos Generales',
+        address: 'Dirección',
+        catastro: 'Referencia Catastral',
+        acquisitionDate: 'Fecha de Adquisición',
+        purchasePrice: 'Precio de Compra',
+        rooms: 'Número de Habitaciones',
+        description: 'Descripción',
+        floorPlan: 'Plano (URL de la imagen)',
+        observations: 'ITE/Observaciones',
+        contractSection: 'Contrato de Alquiler',
+        tenantName: 'Inquilino',
+        tenantId: 'DNI/NIE',
+        tenantContact: 'Contacto',
+        contractStart: 'Inicio',
+        contractEnd: 'Fin',
+        monthlyRent: 'Renta Mensual',
+        paymentMethod: 'Forma de Pago',
+        deposit: 'Fianza',
+        annualUpdates: 'Actualizaciones',
+        suppliesSection: 'Suministros',
+        electricity: 'Electricidad',
+        water: 'Agua',
+        waste: 'Basuras',
+        gas: 'Gas',
+        company: 'Compañía',
+        holder: 'Titular',
+        contractNumber: 'Nº Contrato',
+        startDate: 'Fecha Alta',
+        monthlyCost: 'Coste Mensual',
+        wasteFee: 'Tasa Municipal',
+        wasteFrequency: 'Frecuencia de Pago',
+        communitySection: 'Comunidad de Propietarios',
+        communityFee: 'Cuota',
+        communityManager: 'Administrador',
+        communityContact: 'Contacto',
+        communityMinutes: 'Últimas Actas',
+        insuranceSection: 'Seguros',
+        insuranceCompany: 'Compañía',
+        insurancePolicy: 'Póliza',
+        insuranceCoverage: 'Coberturas',
+        insurancePremium: 'Prima Anual',
+        insuranceRenewal: 'Renovación',
+        repairsSection: 'Historial de Reparaciones',
+        repairsAdd: 'Añadir Reparación',
+        date: 'Fecha',
+        cost: 'Coste',
+        warranty: 'Garantía',
+        repairDate: 'Fecha',
+        repairCompany: 'Empresa',
+        repairDesc: 'Descripción',
+        repairCost: 'Coste',
+        repairWarranty: 'Garantía',
+        addRepairButton: 'Añadir',
+        profitabilitySection: 'Rentabilidad Anual',
+        income: 'Ingresos',
+        expenses: 'Gastos',
+        benefit: 'Beneficio',
+        profitability: 'Rentabilidad (%)',
+        save: 'Guardar',
+        footer: 'Datos almacenados en localStorage del navegador'
+    },
+    en: {
+        title: 'Property Management',
+        propertyLabel: 'Property:',
+        newProperty: 'New Property',
+        'tab-general': 'General',
+        'tab-contract': 'Contract',
+        'tab-supplies': 'Supplies',
+        'tab-community': 'Community',
+        'tab-insurance': 'Insurance',
+        'tab-repairs': 'Repairs',
+        'tab-profitability': 'Profitability',
+        generalSection: 'General Data',
+        address: 'Address',
+        catastro: 'Land Registry',
+        acquisitionDate: 'Acquisition Date',
+        purchasePrice: 'Purchase Price',
+        rooms: 'Rooms',
+        description: 'Description',
+        floorPlan: 'Floor Plan (image URL)',
+        observations: 'ITE/Observations',
+        contractSection: 'Rental Contract',
+        tenantName: 'Tenant',
+        tenantId: 'ID',
+        tenantContact: 'Contact',
+        contractStart: 'Start',
+        contractEnd: 'End',
+        monthlyRent: 'Monthly Rent',
+        paymentMethod: 'Payment Method',
+        deposit: 'Deposit',
+        annualUpdates: 'Updates',
+        suppliesSection: 'Supplies',
+        electricity: 'Electricity',
+        water: 'Water',
+        waste: 'Waste',
+        gas: 'Gas',
+        company: 'Company',
+        holder: 'Holder',
+        contractNumber: 'Contract No.',
+        startDate: 'Start Date',
+        monthlyCost: 'Monthly Cost',
+        wasteFee: 'Municipal Fee',
+        wasteFrequency: 'Payment Frequency',
+        communitySection: 'Homeowners Association',
+        communityFee: 'Fee',
+        communityManager: 'Manager',
+        communityContact: 'Contact',
+        communityMinutes: 'Last Minutes',
+        insuranceSection: 'Insurance',
+        insuranceCompany: 'Company',
+        insurancePolicy: 'Policy',
+        insuranceCoverage: 'Coverage',
+        insurancePremium: 'Annual Premium',
+        insuranceRenewal: 'Renewal',
+        repairsSection: 'Repairs History',
+        repairsAdd: 'Add Repair',
+        date: 'Date',
+        cost: 'Cost',
+        warranty: 'Warranty',
+        repairDate: 'Date',
+        repairCompany: 'Company',
+        repairDesc: 'Description',
+        repairCost: 'Cost',
+        repairWarranty: 'Warranty',
+        addRepairButton: 'Add',
+        profitabilitySection: 'Annual Profitability',
+        income: 'Income',
+        expenses: 'Expenses',
+        benefit: 'Profit',
+        profitability: 'Profitability (%)',
+        save: 'Save',
+        footer: 'Data stored in browser localStorage'
+    }
+};
+
+function applyTranslations(lang) {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        let text = translations[lang][key];
+        if (text) {
+            if (el.tagName.toLowerCase() === 'label') {
+                el.childNodes[0].nodeValue = text;
+            } else {
+                el.textContent = text;
+            }
+        }
+    });
+    document.documentElement.lang = lang;
+}
 
 let properties = JSON.parse(localStorage.getItem('properties') || '{}');
 let current = null;
@@ -243,6 +406,10 @@ darkToggle.addEventListener("click", () => {
     document.body.classList.toggle("dark");
 });
 
+languageSelect.addEventListener('change', () => {
+    applyTranslations(languageSelect.value);
+});
+
 
 function getEmptyProperty() {
     return {
@@ -265,6 +432,7 @@ function init() {
     populateSelect();
     propertySelect.selectedIndex = 0;
     propertySelect.dispatchEvent(new Event('change'));
+    applyTranslations(languageSelect.value);
 }
 
 init();

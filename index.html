@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Gestión de Propiedades</h1>
+            <h1 data-i18n="title">Gestión de Propiedades</h1>
             <div class="controls">
                 <select id="language">
                     <option value="es">ES</option>
@@ -20,113 +20,124 @@
         </header>
 
         <section id="property-selector">
-            <label for="property">Propiedad:</label>
+            <label for="property" data-i18n="propertyLabel">Propiedad:</label>
             <select id="property"></select>
-            <button id="new-property">Nueva Propiedad</button>
+            <button id="new-property" data-i18n="newProperty">Nueva Propiedad</button>
         </section>
 
         <nav id="tabs">
-            <button class="tab active" data-target="general">Generales</button>
-            <button class="tab" data-target="contract">Contrato</button>
-            <button class="tab" data-target="supplies">Suministros</button>
-            <button class="tab" data-target="community">Comunidad</button>
-            <button class="tab" data-target="insurance">Seguros</button>
-            <button class="tab" data-target="repairs">Reparaciones</button>
-            <button class="tab" data-target="profitability">Rentabilidad</button>
+            <button class="tab active" data-target="general" data-i18n="tab-general">Generales</button>
+            <button class="tab" data-target="contract" data-i18n="tab-contract">Contrato</button>
+            <button class="tab" data-target="supplies" data-i18n="tab-supplies">Suministros</button>
+            <button class="tab" data-target="community" data-i18n="tab-community">Comunidad</button>
+            <button class="tab" data-target="insurance" data-i18n="tab-insurance">Seguros</button>
+            <button class="tab" data-target="repairs" data-i18n="tab-repairs">Reparaciones</button>
+            <button class="tab" data-target="profitability" data-i18n="tab-profitability">Rentabilidad</button>
         </nav>
 
         <section id="general" class="tab-section active">
-            <h2>Datos Generales</h2>
-            <label>Dirección<input type="text" id="address"></label>
-            <label>Referencia Catastral<input type="text" id="catastro"></label>
-            <label>Fecha de Adquisición<input type="date" id="acquisitionDate"></label>
-            <label>Precio de Compra<input type="number" id="purchasePrice"></label>
-            <label>Número de Habitaciones<input type="number" id="rooms"></label>
-            <label>Descripción<textarea id="description"></textarea></label>
-            <label>Plano (URL de la imagen)<input type="text" id="floorPlan"></label>
-            <label>ITE/Observaciones<textarea id="observations"></textarea></label>
+            <h2 data-i18n="generalSection">Datos Generales</h2>
+            <label data-i18n="address">Dirección<input type="text" id="address"></label>
+            <label data-i18n="catastro">Referencia Catastral<input type="text" id="catastro"></label>
+            <label data-i18n="acquisitionDate">Fecha de Adquisición<input type="date" id="acquisitionDate"></label>
+            <label data-i18n="purchasePrice">Precio de Compra<input type="number" id="purchasePrice"></label>
+            <label data-i18n="rooms">Número de Habitaciones<input type="number" id="rooms"></label>
+            <label data-i18n="description">Descripción<textarea id="description"></textarea></label>
+            <label data-i18n="floorPlan">Plano (URL de la imagen)<input type="text" id="floorPlan"></label>
+            <label data-i18n="observations">ITE/Observaciones<textarea id="observations"></textarea></label>
         </section>
 
         <section id="contract" class="tab-section">
-            <h2>Contrato de Alquiler</h2>
-            <label>Inquilino<input type="text" id="tenantName"></label>
-            <label>DNI/NIE<input type="text" id="tenantId"></label>
-            <label>Contacto<input type="text" id="tenantContact"></label>
-            <label>Inicio<input type="date" id="contractStart"></label>
-            <label>Fin<input type="date" id="contractEnd"></label>
-            <label>Renta Mensual<input type="number" id="monthlyRent"></label>
-            <label>Forma de Pago<input type="text" id="paymentMethod"></label>
-            <label>Fianza<input type="number" id="deposit"></label>
-            <label>Actualizaciones<input type="text" id="annualUpdates"></label>
+            <h2 data-i18n="contractSection">Contrato de Alquiler</h2>
+            <label data-i18n="tenantName">Inquilino<input type="text" id="tenantName"></label>
+            <label data-i18n="tenantId">DNI/NIE<input type="text" id="tenantId"></label>
+            <label data-i18n="tenantContact">Contacto<input type="text" id="tenantContact"></label>
+            <label data-i18n="contractStart">Inicio<input type="date" id="contractStart"></label>
+            <label data-i18n="contractEnd">Fin<input type="date" id="contractEnd"></label>
+            <label data-i18n="monthlyRent">Renta Mensual<input type="number" id="monthlyRent"></label>
+            <label data-i18n="paymentMethod">Forma de Pago<input type="text" id="paymentMethod"></label>
+            <label data-i18n="deposit">Fianza<input type="number" id="deposit"></label>
+            <label data-i18n="annualUpdates">Actualizaciones<input type="text" id="annualUpdates"></label>
         </section>
 
         <section id="supplies" class="tab-section">
-            <h2>Suministros</h2>
-            <h3>Electricidad</h3>
-            <label>Compañía<input type="text" id="electricCompany"></label>
-            <label>Titular<input type="text" id="electricHolder"></label>
-            <label>Nº Contrato<input type="text" id="electricContract"></label>
-            <label>Fecha Alta<input type="date" id="electricDate"></label>
-            <label>Coste Mensual<input type="number" id="electricCost"></label>
+            <h2 data-i18n="suppliesSection">Suministros</h2>
+            <h3 data-i18n="electricity">Electricidad</h3>
+            <label data-i18n="company">Compañía<input type="text" id="electricCompany"></label>
+            <label data-i18n="holder">Titular<input type="text" id="electricHolder"></label>
+            <label data-i18n="contractNumber">Nº Contrato<input type="text" id="electricContract"></label>
+            <label data-i18n="startDate">Fecha Alta<input type="date" id="electricDate"></label>
+            <label data-i18n="monthlyCost">Coste Mensual<input type="number" id="electricCost"></label>
 
-            <h3>Agua</h3>
-            <label>Compañía<input type="text" id="waterCompany"></label>
-            <label>Titular<input type="text" id="waterHolder"></label>
-            <label>Nº Contrato<input type="text" id="waterContract"></label>
-            <label>Fecha Alta<input type="date" id="waterDate"></label>
-            <label>Coste Mensual<input type="number" id="waterCost"></label>
+            <h3 data-i18n="water">Agua</h3>
+            <label data-i18n="company">Compañía<input type="text" id="waterCompany"></label>
+            <label data-i18n="holder">Titular<input type="text" id="waterHolder"></label>
+            <label data-i18n="contractNumber">Nº Contrato<input type="text" id="waterContract"></label>
+            <label data-i18n="startDate">Fecha Alta<input type="date" id="waterDate"></label>
+            <label data-i18n="monthlyCost">Coste Mensual<input type="number" id="waterCost"></label>
 
-            <h3>Basuras</h3>
-            <label>Tasa Municipal<input type="number" id="wasteFee"></label>
-            <label>Frecuencia de Pago<input type="text" id="wasteFrequency"></label>
+            <h3 data-i18n="waste">Basuras</h3>
+            <label data-i18n="wasteFee">Tasa Municipal<input type="number" id="wasteFee"></label>
+            <label data-i18n="wasteFrequency">Frecuencia de Pago<input type="text" id="wasteFrequency"></label>
 
-            <h3>Gas</h3>
-            <label>Compañía<input type="text" id="gasCompany"></label>
-            <label>Titular<input type="text" id="gasHolder"></label>
-            <label>Nº Contrato<input type="text" id="gasContract"></label>
-            <label>Fecha Alta<input type="date" id="gasDate"></label>
-            <label>Coste Mensual<input type="number" id="gasCost"></label>
+            <h3 data-i18n="gas">Gas</h3>
+            <label data-i18n="company">Compañía<input type="text" id="gasCompany"></label>
+            <label data-i18n="holder">Titular<input type="text" id="gasHolder"></label>
+            <label data-i18n="contractNumber">Nº Contrato<input type="text" id="gasContract"></label>
+            <label data-i18n="startDate">Fecha Alta<input type="date" id="gasDate"></label>
+            <label data-i18n="monthlyCost">Coste Mensual<input type="number" id="gasCost"></label>
         </section>
 
         <section id="community" class="tab-section">
-            <h2>Comunidad de Propietarios</h2>
-            <label>Cuota<input type="number" id="communityFee"></label>
-            <label>Administrador<input type="text" id="communityManager"></label>
-            <label>Contacto<input type="text" id="communityContact"></label>
-            <label>Últimas Actas<textarea id="communityMinutes"></textarea></label>
+            <h2 data-i18n="communitySection">Comunidad de Propietarios</h2>
+            <label data-i18n="communityFee">Cuota<input type="number" id="communityFee"></label>
+            <label data-i18n="communityManager">Administrador<input type="text" id="communityManager"></label>
+            <label data-i18n="communityContact">Contacto<input type="text" id="communityContact"></label>
+            <label data-i18n="communityMinutes">Últimas Actas<textarea id="communityMinutes"></textarea></label>
         </section>
 
         <section id="insurance" class="tab-section">
-            <h2>Seguros</h2>
-            <label>Compañía<input type="text" id="insuranceCompany"></label>
-            <label>Póliza<input type="text" id="insurancePolicy"></label>
-            <label>Coberturas<textarea id="insuranceCoverage"></textarea></label>
-            <label>Prima Anual<input type="number" id="insurancePremium"></label>
-            <label>Renovación<input type="date" id="insuranceRenewal"></label>
+            <h2 data-i18n="insuranceSection">Seguros</h2>
+            <label data-i18n="insuranceCompany">Compañía<input type="text" id="insuranceCompany"></label>
+            <label data-i18n="insurancePolicy">Póliza<input type="text" id="insurancePolicy"></label>
+            <label data-i18n="insuranceCoverage">Coberturas<textarea id="insuranceCoverage"></textarea></label>
+            <label data-i18n="insurancePremium">Prima Anual<input type="number" id="insurancePremium"></label>
+            <label data-i18n="insuranceRenewal">Renovación<input type="date" id="insuranceRenewal"></label>
         </section>
 
         <section id="repairs" class="tab-section">
-            <h2>Historial de Reparaciones</h2>
+            <h2 data-i18n="repairsSection">Historial de Reparaciones</h2>
             <table id="repairsTable">
                 <thead>
-                    <tr><th>Fecha</th><th>Empresa</th><th>Descripción</th><th>Coste</th><th>Garantía</th></tr>
+                    <tr>
+                        <th data-i18n="date">Fecha</th>
+                        <th data-i18n="company">Empresa</th>
+                        <th data-i18n="description">Descripción</th>
+                        <th data-i18n="cost">Coste</th>
+                        <th data-i18n="warranty">Garantía</th>
+                    </tr>
                 </thead>
                 <tbody></tbody>
             </table>
-            <h3>Añadir Reparación</h3>
-            <label>Fecha<input type="date" id="repairDate"></label>
-            <label>Empresa<input type="text" id="repairCompany"></label>
-            <label>Descripción<input type="text" id="repairDesc"></label>
-            <label>Coste<input type="number" id="repairCost"></label>
-            <label>Garantía<input type="text" id="repairWarranty"></label>
-            <button id="addRepair">Añadir</button>
+            <h3 data-i18n="repairsAdd">Añadir Reparación</h3>
+            <label data-i18n="repairDate">Fecha<input type="date" id="repairDate"></label>
+            <label data-i18n="repairCompany">Empresa<input type="text" id="repairCompany"></label>
+            <label data-i18n="repairDesc">Descripción<input type="text" id="repairDesc"></label>
+            <label data-i18n="repairCost">Coste<input type="number" id="repairCost"></label>
+            <label data-i18n="repairWarranty">Garantía<input type="text" id="repairWarranty"></label>
+            <button id="addRepair" data-i18n="addRepairButton">Añadir</button>
         </section>
 
         <section id="profitability" class="tab-section">
-            <h2>Rentabilidad Anual</h2>
+            <h2 data-i18n="profitabilitySection">Rentabilidad Anual</h2>
             <table>
                 <thead>
-                    <tr><th>Ingresos</th><th>Gastos</th><th>Beneficio</th><th>Rentabilidad (%)</th></tr>
+                    <tr>
+                        <th data-i18n="income">Ingresos</th>
+                        <th data-i18n="expenses">Gastos</th>
+                        <th data-i18n="benefit">Beneficio</th>
+                        <th data-i18n="profitability">Rentabilidad (%)</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr id="profitRow"></tr>
@@ -134,8 +145,8 @@
             </table>
         </section>
 
-        <button id="save">Guardar</button>
-        <footer>Datos almacenados en localStorage del navegador</footer>
+        <button id="save" data-i18n="save">Guardar</button>
+        <footer data-i18n="footer">Datos almacenados en localStorage del navegador</footer>
     </div>
 
     <script src="script.js"></script>
