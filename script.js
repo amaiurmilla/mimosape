@@ -4,6 +4,9 @@ const saveBtn = document.getElementById('save');
 const addRepairBtn = document.getElementById('addRepair');
 const repairsTableBody = document.querySelector('#repairsTable tbody');
 const profitRow = document.getElementById('profitRow');
+const tabs = document.querySelectorAll('#tabs .tab');
+const sections = document.querySelectorAll('.tab-section');
+const darkToggle = document.getElementById('dark-toggle');
 
 let properties = JSON.parse(localStorage.getItem('properties') || '{}');
 let current = null;
@@ -225,6 +228,21 @@ addRepairBtn.addEventListener('click', () => {
     addRepairRow(r);
     updateProfit();
 });
+
+tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        sections.forEach(s => s.classList.remove("active"));
+        const target = document.getElementById(tab.dataset.target);
+        if (target) target.classList.add("active");
+    });
+});
+
+darkToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+});
+
 
 function getEmptyProperty() {
     return {
