@@ -212,10 +212,11 @@ body.dark #exportExcel:hover {
     gap: 10px;
     margin-top: 10px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 #photos img {
-    width: 200px;
+    width: 300px;
     border-radius: 8px;
     object-fit: cover;
 }
