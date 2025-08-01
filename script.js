@@ -3,6 +3,9 @@ const newPropertyBtn = document.getElementById('new-property');
 const saveBtn = document.getElementById('save');
 const exportBtn = document.getElementById('exportExcel');
 const addRepairBtn = document.getElementById('addRepair');
+const uploadPhotosBtn = document.getElementById('uploadPhotos');
+const photoInput = document.getElementById('photoInput');
+const photoContainer = document.getElementById('photos');
 const repairsTableBody = document.querySelector('#repairsTable tbody');
 const profitRow = document.getElementById('profitRow');
 const tabs = document.querySelectorAll('#tabs .tab');
@@ -83,6 +86,7 @@ const translations = {
         profitability: 'Rentabilidad (%)',
         save: 'Guardar',
         exportExcel: 'Exportar a Excel',
+        uploadPhotos: 'Subir Fotos',
         footer: 'Datos almacenados en localStorage del navegador'
     },
     en: {
@@ -157,6 +161,7 @@ const translations = {
         profitability: 'Profitability (%)',
         save: 'Save',
         exportExcel: 'Export to Excel',
+        uploadPhotos: 'Upload Photos',
         footer: 'Data stored in browser localStorage'
     }
 };
@@ -179,6 +184,7 @@ function applyTranslations(lang) {
 let properties = JSON.parse(localStorage.getItem('properties') || '{}');
 let current = localStorage.getItem('currentProperty');
 let saveTimeout;
+let currentPhotos = [];
 
 function autoSave() {
     if (!current) return;
@@ -206,6 +212,8 @@ function clearForm() {
     document.querySelectorAll('input, textarea').forEach(el => el.value = '');
     repairsTableBody.innerHTML = '';
     profitRow.innerHTML = '';
+    photoContainer.innerHTML = '';
+    currentPhotos = [];
 }
 
 function fillForm(data) {
@@ -269,6 +277,8 @@ function fillForm(data) {
     for (const r of data.repairs) {
         addRepairRow(r);
     }
+    currentPhotos = data.photos || [];
+    displayPhotos();
     updateProfit();
 }
 
@@ -343,6 +353,7 @@ function grabForm() {
             cost: parseFloat(row.children[3].textContent) || 0,
             warranty: row.children[4].textContent,
         })),
+        photos: currentPhotos.slice(),
     };
 }
 
@@ -350,6 +361,15 @@ function addRepairRow(r) {
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${r.date}</td><td>${r.company}</td><td>${r.description}</td><td>${r.cost}</td><td>${r.warranty}</td>`;
     repairsTableBody.appendChild(tr);
+}
+
+function displayPhotos() {
+    photoContainer.innerHTML = '';
+    currentPhotos.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        photoContainer.appendChild(img);
+    });
 }
 
 function computeProfit(data) {
@@ -505,6 +525,34 @@ exportBtn.addEventListener('click', () => {
     generateExcel(data);
 });
 
+uploadPhotosBtn.addEventListener('click', () => {
+    if (!current) {
+        alert('Seleccione una propiedad');
+        return;
+    }
+    photoInput.click();
+});
+
+photoInput.addEventListener('change', () => {
+    const files = Array.from(photoInput.files).slice(0, 2);
+    currentPhotos = [];
+    if (files.length === 0) return;
+    let remaining = files.length;
+    files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            currentPhotos.push(e.target.result);
+            remaining--;
+            if (remaining === 0) {
+                displayPhotos();
+                scheduleAutoSave();
+            }
+        };
+        reader.readAsDataURL(file);
+    });
+    photoInput.value = '';
+});
+
 addRepairBtn.addEventListener('click', () => {
     const r = {
         date: document.getElementById('repairDate').value,
@@ -549,6 +597,7 @@ function getEmptyProperty() {
         community: {},
         insurance: {},
         repairs: [],
+        photos: [],
     };
 }
 

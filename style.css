@@ -199,6 +199,28 @@ body.dark #exportExcel:hover {
     background: #155d27;
 }
 
+#uploadPhotos {
+    background: #6c757d;
+    color: #fff;
+    padding: 12px 0;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#photos {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+#photos img {
+    width: 300px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
 footer {
     text-align: center;
     font-size: 12px;
