@@ -177,7 +177,20 @@ function applyTranslations(lang) {
 }
 
 let properties = JSON.parse(localStorage.getItem('properties') || '{}');
-let current = null;
+let current = localStorage.getItem('currentProperty');
+let saveTimeout;
+
+function autoSave() {
+    if (!current) return;
+    properties[current] = grabForm();
+    localStorage.setItem('properties', JSON.stringify(properties));
+    updateProfit();
+}
+
+function scheduleAutoSave() {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(autoSave, 300);
+}
 
 function populateSelect() {
     propertySelect.innerHTML = '';
@@ -453,6 +466,7 @@ function generateExcel(data) {
 propertySelect.addEventListener('change', () => {
     const key = propertySelect.value;
     current = key;
+    localStorage.setItem('currentProperty', current);
     if (properties[key]) {
         fillForm(properties[key]);
     } else {
@@ -467,6 +481,7 @@ newPropertyBtn.addEventListener('click', () => {
         populateSelect();
         propertySelect.value = name;
         propertySelect.dispatchEvent(new Event('change'));
+        localStorage.setItem('properties', JSON.stringify(properties));
     }
 });
 
@@ -500,6 +515,7 @@ addRepairBtn.addEventListener('click', () => {
     };
     addRepairRow(r);
     updateProfit();
+    scheduleAutoSave();
 });
 
 tabs.forEach(tab => {
@@ -518,6 +534,10 @@ darkToggle.addEventListener("click", () => {
 
 languageSelect.addEventListener('change', () => {
     applyTranslations(languageSelect.value);
+});
+
+document.querySelectorAll('.tab-section input, .tab-section textarea').forEach(el => {
+    el.addEventListener('input', scheduleAutoSave);
 });
 
 
@@ -540,7 +560,12 @@ function init() {
         properties['Local'] = getEmptyProperty();
     }
     populateSelect();
-    propertySelect.selectedIndex = 0;
+    if (current && properties[current]) {
+        propertySelect.value = current;
+    } else {
+        propertySelect.selectedIndex = 0;
+        current = propertySelect.value;
+    }
     propertySelect.dispatchEvent(new Event('change'));
     applyTranslations(languageSelect.value);
 }
